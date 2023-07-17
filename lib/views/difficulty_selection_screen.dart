@@ -11,7 +11,7 @@ class Difficulty {
 
 class DifficultySelectionScreen extends StatelessWidget {
   final List<Difficulty> difficulties = [
-    Difficulty(level: "入門", stars: "★☆☆☆☆", unlockCondition: "", isUnlocked: true),
+    Difficulty(level: "入門レベル", stars: "★☆☆☆☆", unlockCondition: "", isUnlocked: true),
     Difficulty(level: "初級レベル", stars: "★★☆☆☆", unlockCondition: "入門を1回クリアで解放"),
     Difficulty(level: "中級レベル", stars: "★★★☆☆", unlockCondition: "初級を5回クリアで解放"),
     Difficulty(level: "上級レベル", stars: "★★★★☆", unlockCondition: "中級を10回クリアで解放"),
