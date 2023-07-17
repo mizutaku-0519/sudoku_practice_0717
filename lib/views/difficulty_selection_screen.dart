@@ -46,7 +46,7 @@ class DifficultySelectionScreen extends StatelessWidget {
                         ),
                         child: Row(
                           children: [
-                            SizedBox(width: 20), // Space between the icon and the text
+                            SizedBox(width: 10), // Space between the icon and the text
                             Icon(difficulties[index].isUnlocked ? Icons.star : Icons.lock), // Replace with your preferred icon
                             SizedBox(width: 30), // Space between the icon and the text
                             Column(
