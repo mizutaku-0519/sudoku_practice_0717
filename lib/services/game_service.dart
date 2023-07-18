@@ -16,8 +16,8 @@ class GameService extends ChangeNotifier {
   int mistakeCount = 0;
   DateTime? startTime;
 
-  // Add these new properties
   int maxMistakes = 10;
+  int helpCount = 5;  // Add this new property
   final int totalCells = 81;
 
   GameService() {
@@ -34,16 +34,22 @@ class GameService extends ChangeNotifier {
     _playerBoard = List.from(_currentGame!.sudoku);
     startTime = DateTime.now();
 
-    // Adjust maxMistakes based on difficulty
     switch (difficulty) {
       case '中級':
         maxMistakes = 20;
+        helpCount = 3;  // Adjust helpCount based on difficulty
         break;
       case '上級':
         maxMistakes = 30;
+        helpCount = 2;  // Adjust helpCount based on difficulty
+        break;
+      case '達人級':
+        maxMistakes = 30;
+        helpCount = 2;  // Adjust helpCount based on difficulty
         break;
       default:
         maxMistakes = 10;
+        helpCount = 5;  // Adjust helpCount based on difficulty
         break;
     }
 
@@ -76,7 +82,6 @@ class GameService extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Change return type to int
   int getRemainingCellsCount() {
     int remaining = 0;
     for (List<int?> row in _playerBoard!) {
@@ -89,7 +94,6 @@ class GameService extends ChangeNotifier {
     return remaining;
   }
 
-  // Change return type to int
   int getMistakeCount() {
     return mistakeCount;
   }
