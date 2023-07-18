@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sudoku_practice_0717/views/game_screen.dart';
 
 class Difficulty {
   final String level;
@@ -37,7 +38,12 @@ class DifficultySelectionScreen extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: difficulties[index].isUnlocked ? () {
                           // Implement your navigation logic here
-                          // Navigator.push(...) or similar
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => GameScreen(),
+                            ),
+                          );
                         } : null,
                         style: ElevatedButton.styleFrom(
                           primary: difficulties[index].isUnlocked ? Color(0xFF1e50a2) : Color(0xFFBDBDB7),

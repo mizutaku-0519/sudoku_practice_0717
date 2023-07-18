@@ -1,10 +1,12 @@
 import 'package:flutter/foundation.dart';
-import 'package:sudoku_solver_generator/sudoku_solver_generator.dart';
 import 'package:sudoku_practice_0717/models/game.dart';
 
 class GameService extends ChangeNotifier {
   Game? _currentGame;
   List<List<int?>>? _playerBoard;
+  // 追加：GameService内
+  Tuple<int, int>? selectedCell;
+
 
   GameService() {
     startNewGame();
@@ -21,7 +23,8 @@ class GameService extends ChangeNotifier {
   }
 
   bool insertNumber(int row, int col, int number) {
-    if (_playerBoard![row][col] == null && SudokuUtilities.isValidSudoku(_playerBoard!, row: row, col: col, number: number)) {
+    // Check if the cell is empty and the number is correct.
+    if (_playerBoard![row][col] == null && number == _currentGame!.solution[row][col]) {
       _playerBoard![row][col] = number;
       notifyListeners();
       return true;
