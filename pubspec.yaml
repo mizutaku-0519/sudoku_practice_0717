@@ -30,7 +30,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
   sudoku_solver_generator: ^2.1.0+1
   font_awesome_flutter: ^10.5.0
   google_fonts: ^5.1.0
@@ -44,6 +43,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  tuple: ^2.0.2
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

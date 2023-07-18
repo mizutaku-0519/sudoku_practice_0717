@@ -15,62 +15,68 @@ class _GameScreenState extends State<GameScreen> {
   void initState() {
     super.initState();
     _gameService = Provider.of<GameService>(context, listen: false);
-    _gameService.startNewGame();
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      _gameService.startNewGame();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('数独ゲーム'),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            // 各種コンポーネント（AppBar, InformationPanel, SudokuGrid, ControlPanel, NumberController, AdvertisementArea）を定義して、上記のColumnウィジェットの子として追加していきます
-            InformationPanel(),
-            SudokuGrid(),
-            ControlPanel(),
-            NumberController(),
-            AdvertisementArea(),
-          ],
+    return WillPopScope(
+      onWillPop: () async {
+        bool goBack = await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('終了しますか？'),
+            actions: [
+              TextButton(
+                child: Text('キャンセル'),
+                onPressed: () => Navigator.of(context).pop(false),
+              ),
+              TextButton(
+                child: Text('終了する'),
+                onPressed: () => Navigator.of(context).pop(true),
+              ),
+            ],
+          ),
+        );
+        return goBack ?? false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton( // AppBarの左側にあるアイコンボタンを変更
+            icon: Icon(Icons.arrow_back),
+            onPressed: () async {
+              bool goBack = await showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text('終了しますか？'),
+                  actions: [
+                    TextButton(
+                      child: Text('キャンセル'),
+                      onPressed: () => Navigator.of(context).pop(false),
+                    ),
+                    TextButton(
+                      child: Text('終了する'),
+                      onPressed: () => Navigator.of(context).pop(true),
+                    ),
+                  ],
+                ),
+              );
+              if (goBack == true) {
+                Navigator.of(context).pushReplacementNamed('/'); // ホーム画面に戻る
+              }
+            },
+          ),
+          title: Text('難易度：${_gameService.difficulty}'), // 難易度を表示
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: SudokuGrid(),
+          ),
         ),
       ),
-    );
-  }
-}
-
-//SudokuGrid()の実装
-
-// セルを選択するメソッドを追加
-void selectCell(int row, int column) {
-  selectedCell = Tuple(row, column);
-  notifyListeners();
-}
-
-class SudokuGrid extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<GameService>(
-      builder: (context, gameService, child) {
-        return Table(
-          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-          border: TableBorder.all(),
-          children: List.generate(9, (i) {
-            return TableRow(
-              children: List.generate(9, (j) {
-                int? cellValue = gameService.playerBoard[i][j];
-                return Container(
-                  padding: EdgeInsets.all(8.0),
-                  child: Center(
-                    child: Text(cellValue != null ? cellValue.toString() : ''),
-                  ),
-                );
-              }),
-            );
-          }),
-        );
-      },
     );
   }
 }

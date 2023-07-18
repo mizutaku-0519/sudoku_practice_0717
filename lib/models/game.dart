@@ -3,6 +3,7 @@ import 'package:sudoku_solver_generator/sudoku_solver_generator.dart';
 class Game {
   late List<List<int?>> sudoku; // プレイ中の数独パズル
   late List<List<int?>> solution; // パズルの解
+  late String difficulty; // この行を追加
 
   // 難易度ごとの空白セルの数
   static const difficultyLevels = {
@@ -15,6 +16,7 @@ class Game {
 
   // デフォルトの難易度を '入門' とする
   Game({String difficulty = '入門'}) {
+    this.difficulty = difficulty; // この行を追加
     var emptySquares = difficultyLevels[difficulty];
     if (emptySquares == null) {
       throw ArgumentError('Invalid difficulty level: $difficulty');

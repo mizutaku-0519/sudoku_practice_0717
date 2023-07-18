@@ -1,18 +1,24 @@
 import 'package:flutter/foundation.dart';
 import 'package:sudoku_practice_0717/models/game.dart';
 
+class Cell {
+  final int row;
+  final int col;
+
+  Cell(this.row, this.col);
+}
+
 class GameService extends ChangeNotifier {
   Game? _currentGame;
   List<List<int?>>? _playerBoard;
-  // 追加：GameService内
-  Tuple<int, int>? selectedCell;
-
+  Cell? selectedCell;
 
   GameService() {
     startNewGame();
   }
 
   Game get currentGame => _currentGame!;
+  String get difficulty => _currentGame!.difficulty; // この行を追加します。
 
   List<List<int?>> get playerBoard => _playerBoard!;
 
@@ -23,7 +29,6 @@ class GameService extends ChangeNotifier {
   }
 
   bool insertNumber(int row, int col, int number) {
-    // Check if the cell is empty and the number is correct.
     if (_playerBoard![row][col] == null && number == _currentGame!.solution[row][col]) {
       _playerBoard![row][col] = number;
       notifyListeners();
@@ -40,5 +45,10 @@ class GameService extends ChangeNotifier {
     _playerBoard = List.from(_currentGame!.sudoku);
     notifyListeners();
     return true;
+  }
+
+  void selectCell(int row, int col) {
+    selectedCell = Cell(row, col);
+    notifyListeners();
   }
 }
