@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/game_service.dart';
+import 'package:badges/badges.dart' as badges;
+
+
 
 
 //実装済み
@@ -117,7 +120,7 @@ class InformationPanel extends StatelessWidget {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(Icons.access_time, size: 20,),
+                  Icon(Icons.timer_outlined, size: 20,),
                   SizedBox(width: 10),  // Give some spacing
                   Text('${twoDigits(elapsedTime.inMinutes)}:${twoDigits(elapsedTime.inSeconds % 60)}',style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                 ],
@@ -135,7 +138,86 @@ class InformationPanel extends StatelessWidget {
 class ControlPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(); // TODO: Implementation based on the functional requirements
+    // GameServiceから状態を取得する
+    GameService gameService = Provider.of<GameService>(context);
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Column(
+          children: [
+            IconButton(
+              icon: Icon(Icons.undo, size: 30,),
+              onPressed: () {
+                // TODO: ここで戻る機能を実装
+              },
+            ),
+            Text('戻る'),
+          ],
+        ), //戻るボタン
+        Column(
+          children: [
+            IconButton(
+              icon: Icon(Icons.edit, size: 30,),
+              onPressed: () {
+                // TODO: ここで下書き機能を実装
+              },
+            ),
+            Text('下書き'),
+          ],
+        ), //下書きボタン
+        Column(
+          children: [
+            IconButton(
+              icon: Icon(Icons.check, size: 30,),
+              onPressed: () {
+                // TODO: ここで数字の入力機能を実装
+              },
+            ),
+            Text('確定'),
+          ],
+        ),
+        Column(
+          children: [
+            Stack(
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.emoji_flags, size: 35,),
+                  onPressed: () {
+                    // TODO: ここでお助け機能を実装
+                    gameService.helpCount--;  // お助け機能を使うと回数が1減る
+                  },
+                ),
+                Positioned(
+                  right: 0,
+                  child: Container(
+                    padding: EdgeInsets.all(1),
+                    decoration: BoxDecoration(
+                      color: Color(0xFF9F2641),
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    constraints: BoxConstraints(
+                      minWidth: 23,
+                      minHeight: 23,
+                    ),
+                    child: Text(
+                      gameService.helpCount.toString(),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                )
+              ],
+            ),
+            Text('お助け'),
+          ],
+        ),
+      ],
+    );
   }
 }
 
