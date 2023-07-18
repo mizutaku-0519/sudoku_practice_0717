@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:sudoku_practice_0717/services/game_service.dart';
+import 'package:sudoku_practice_0717/views/game_screen.dart';
 import 'views/home_screen.dart';
 
 void main() {
@@ -40,7 +41,7 @@ class SudokuApp extends StatelessWidget {
             Theme.of(context).textTheme,
           ),
         ),
-        home: HomeScreen(),
+        home: GameScreen(),
       ),
     );
   }
