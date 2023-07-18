@@ -19,6 +19,7 @@ class GameService extends ChangeNotifier {
   int maxMistakes = 10;
   int helpCount = 5;  // Add this new property
   final int totalCells = 81;
+  int? selectedNumber;
 
   GameService() {
     startNewGame();
@@ -79,6 +80,11 @@ class GameService extends ChangeNotifier {
 
   void selectCell(int row, int col) {
     selectedCell = Cell(row, col);
+    notifyListeners();
+  }
+
+  void selectNumber(int number) {
+    selectedNumber = number;
     notifyListeners();
   }
 
