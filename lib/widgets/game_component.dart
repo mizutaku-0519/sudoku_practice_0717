@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/game_service.dart';
-import 'package:badges/badges.dart' as badges;
+
+//機能実装済み
 
 
-
-
-//実装済み
+//デザイン実装済み
 class SudokuGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -133,8 +132,6 @@ class InformationPanel extends StatelessWidget {
   }
 }
 
-
-//未実装
 class ControlPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -203,9 +200,9 @@ class ControlPanel extends StatelessWidget {
                     child: Text(
                       gameService.helpCount.toString(),
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold
+                          color: Colors.white,
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -222,15 +219,71 @@ class ControlPanel extends StatelessWidget {
 }
 
 class NumberController extends StatelessWidget {
+  void _onChipTap(BuildContext context, int number) {
+    Provider.of<GameService>(context, listen: false).selectNumber(number);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(); // TODO: Implementation based on the functional requirements
+    return Consumer<GameService>(
+      builder: (context, gameService, child) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: List<Widget>.generate(9, (index) {
+            int number = index + 1;
+            bool isSelected = gameService.selectedNumber == number;
+            return GestureDetector(
+              onTap: () => _onChipTap(context, number),
+              child: Container(
+                decoration: isSelected
+                    ? BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      width: 2.0,
+                      color: Color(0xFF1e50a2),
+                    ),
+                  ),
+                )
+                    : null,
+                child: Text(
+                  '$number',
+                  style: TextStyle(
+                    fontSize: 30.0,
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                    color: isSelected ? Color(0xFF1e50a2) : Colors.black,
+                  ),
+                ),
+              ),
+            );
+          }),
+        );
+      },
+    );
   }
 }
 
 class AdvertisementArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(); // TODO: Implementation based on the functional requirements
+    return Center(
+      child: Container(
+        width: 300.0,
+        height: 50.0,
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+        ),
+        child: Center(
+          child: Text(
+            '広告表示エリア',
+            style: TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
+
