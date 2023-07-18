@@ -88,14 +88,50 @@ class SudokuGrid extends StatelessWidget {
   }
 }
 
-//未実装
 class InformationPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(); // TODO: Implementation based on the functional requirements
+    // GameServiceから状態を取得する
+    GameService gameService = Provider.of<GameService>(context);
+
+    // 残りマス数、ミス数、経過時間を取得する
+    int remainingCells = gameService.getRemainingCellsCount();
+    int mistakeCount = gameService.getMistakeCount();
+    Duration elapsedTime = gameService.getElapsedTime();
+
+    String twoDigits(int n) => n.toString().padLeft(2, "0");  // Add this helper function
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Flexible(
+          child: Text('残りマス数：$remainingCells/${gameService.totalCells}',style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+        ),
+        Flexible(
+          child: Text('ミス数：$mistakeCount/${gameService.maxMistakes}回',style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),),
+        ),
+        Flexible(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(Icons.access_time, size: 20,),
+                  SizedBox(width: 10),  // Give some spacing
+                  Text('${twoDigits(elapsedTime.inMinutes)}:${twoDigits(elapsedTime.inSeconds % 60)}',style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                ],
+              ),  // Timer icon
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }
 
+
+//未実装
 class ControlPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

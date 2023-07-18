@@ -73,8 +73,17 @@ class _GameScreenState extends State<GameScreen> {
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: SudokuGrid(),
-          ),
+            child: Column(
+              children: [
+                SizedBox(height: 10,),
+                InformationPanel(), // InformationPanelをSudokuGridの上に配置
+                SizedBox(height: 5,),
+                SudokuGrid(), // SudokuGridの配置
+                ControlPanel(), // ControlPanelをSudokuGridの下に配置
+                NumberController(), // NumberControllerをControlPanelの下に配置
+                AdvertisementArea(), // AdvertisementAreaをNumberControllerの下に配置
+              ],
+            ),          ),
         ),
       ),
     );
