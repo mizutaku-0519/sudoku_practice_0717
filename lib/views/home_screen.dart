@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sudoku_practice_0717/views/difficulty_selection_screen.dart';
+import 'package:sudoku_practice_0717/views/ranking_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -31,7 +32,7 @@ class HomeScreen extends StatelessWidget {
             SizedBox(height: 10), // Space between the buttons
             TextButton.icon(
               onPressed: () {
-                // TODO: Implement navigation to ranking screen
+                Navigator.push(context, MaterialPageRoute(builder: (context) => RankingScreen()));
               },
               icon: FaIcon(FontAwesomeIcons.crown, size: 15,), // Crown Icon
               label: Text('ランキングを見る',),
