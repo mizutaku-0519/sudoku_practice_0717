@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sudoku_practice_0717/views/difficulty_selection_screen.dart';
 import 'package:sudoku_practice_0717/views/ranking_screen.dart';
+import 'package:sudoku_practice_0717/widgets/hidden_popup.dart';
 import 'package:sudoku_practice_0717/widgets/user_name_registration_popup.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -13,8 +14,23 @@ class HomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             SizedBox(height: 60,),
-            Image.asset("assets/logo.png",
-                width: 300),
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Image.asset("assets/logo.png", width: 300),
+                TextButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return HiddenPopup(); // Display the gift card popup
+                      },
+                    );
+                  },
+                  child: Text('', style: TextStyle(fontSize: 0)), // Make the button invisible
+                ),
+              ],
+            ),
             SizedBox(height: 20), // Space between the text and buttons
             ElevatedButton.icon(
               onPressed: () {
