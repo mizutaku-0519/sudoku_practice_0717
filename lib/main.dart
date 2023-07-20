@@ -6,6 +6,7 @@ import 'package:sudoku_practice_0717/views/game_screen.dart';
 import 'package:sudoku_practice_0717/widgets/user_name_registration_popup.dart';
 import 'views/home_screen.dart';
 import 'widgets/game_completion_popup.dart';
+import 'widgets/hidden_popup.dart';
 
 void main() {
   runApp(SudokuApp());
