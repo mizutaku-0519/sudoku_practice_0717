@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:sudoku_practice_0717/services/game_service.dart';
 import 'package:sudoku_practice_0717/views/game_screen.dart';
 import 'views/home_screen.dart';
+import 'widgets/game_completion_popup.dart';
 
 void main() {
   runApp(SudokuApp());
@@ -41,7 +42,7 @@ class SudokuApp extends StatelessWidget {
             Theme.of(context).textTheme,
           ),
         ),
-        home: HomeScreen(),
+        home: GameCompletionPopup(),
       ),
     );
   }
