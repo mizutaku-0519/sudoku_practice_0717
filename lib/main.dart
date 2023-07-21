@@ -5,12 +5,19 @@ import 'package:sudoku_practice_0717/services/game_service.dart';
 import 'package:sudoku_practice_0717/views/difficulty_selection_screen.dart';
 import 'package:sudoku_practice_0717/views/game_screen.dart';
 import 'package:sudoku_practice_0717/widgets/user_name_registration_popup.dart';
+import 'models/game.dart';
 import 'views/home_screen.dart';
 import 'widgets/game_completion_popup.dart';
 import 'widgets/hidden_popup.dart';
 
 void main() {
-  runApp(SudokuApp());
+  var game = Game(); // 追加
+  runApp(
+    Provider<Game>.value( // 変更
+      value: game, // 変更
+      child: SudokuApp(),
+    ),
+  );
 }
 
 class SudokuApp extends StatelessWidget {
@@ -45,7 +52,7 @@ class SudokuApp extends StatelessWidget {
             Theme.of(context).textTheme,
           ),
         ),
-        home: HomeScreen(),
+        home: GameScreen(),
       ),
     );
   }

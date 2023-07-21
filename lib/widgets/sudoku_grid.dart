@@ -23,7 +23,7 @@ class SudokuGrid extends StatelessWidget {
                 offset: Offset(0, 1),
               ),
             ],
-            border: Border.all(color: Color(0xFF1e50a2), width: 2), // 9x9のマスを囲む外側の枠線
+            border: Border.all(color: Color(0xFF1e50a2), width: 1.5), // 9x9のマスを囲む外側の枠線
           ),
           child: ClipRRect( // 追加：ClipRRectでTableをラップ
             borderRadius: BorderRadius.circular(10.0),
@@ -44,7 +44,7 @@ class SudokuGrid extends StatelessWidget {
                       }
                     }
 
-                    var thickBorderSide = BorderSide(color: Color(0xFF1e50a2), width: 2.0);  // 3x3のマスの内側の枠線
+                    var thickBorderSide = BorderSide(color: Color(0xFF1e50a2), width: 1.5);  // 3x3のマスの内側の枠線
                     var thinBorderSide = BorderSide(color: Colors.grey, width: 0.5);
                     var leftBorder = j % 3 == 0 ? thickBorderSide : thinBorderSide;
                     var topBorder = i % 3 == 0 ? thickBorderSide : thinBorderSide;
