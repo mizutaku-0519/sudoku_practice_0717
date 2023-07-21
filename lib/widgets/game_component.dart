@@ -20,10 +20,10 @@ class InformationPanel extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Flexible(
-          child: Text('残りマス数：$remainingCells/${gameService.totalCells}',style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+          child: Text('残り：$remainingCellsマス',style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, fontFamily: 'Monospace')),
         ),
         Flexible(
-          child: Text('ミス数：$mistakeCount/${gameService.maxMistakes}回',style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),),
+          child: Text('ミス数： $mistakeCount / ${gameService.maxMistakes}回',style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, fontFamily: 'Monospace'),),
         ),
         Flexible(
           child: Row(
@@ -34,7 +34,10 @@ class InformationPanel extends StatelessWidget {
                 children: [
                   Icon(Icons.timer_outlined, size: 20,),
                   SizedBox(width: 10),  // Give some spacing
-                  Text('${twoDigits(elapsedTime.inMinutes)}:${twoDigits(elapsedTime.inSeconds % 60)}',style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                  Container(
+                    width: 60,  // Adjust this value as needed
+                    child: Text('${twoDigits(elapsedTime.inMinutes)}:${twoDigits(elapsedTime.inSeconds % 60)}',style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Monospace'), textAlign: TextAlign.right,),
+                  ),
                 ],
               ),  // Timer icon
             ],
@@ -130,4 +133,3 @@ class ControlPanel extends StatelessWidget {
     );
   }
 }
-
