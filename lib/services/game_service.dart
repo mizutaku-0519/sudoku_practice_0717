@@ -1,3 +1,4 @@
+import 'dart:async';  // Add this import at the top
 import 'package:flutter/foundation.dart';
 import 'package:sudoku_practice_0717/models/game.dart';
 
@@ -21,6 +22,7 @@ class GameService extends ChangeNotifier {
   final int totalCells = 81;
   int? selectedNumber;
 
+  Timer? _timer;  // Add this property
 
   GameService() {
     startNewGame(difficulty: '入門');
@@ -33,9 +35,9 @@ class GameService extends ChangeNotifier {
 
   void startNewGame({required String difficulty}) {
     _currentGame = Game(difficulty: difficulty);
-    // 新たなパズルを_playerBoardに反映させる
     _playerBoard = List.from(_currentGame!.sudoku.map((row) => row.map((cell) => cell).toList()).toList());
     startTime = DateTime.now();
+    _startTimer();  // Start the timer when a new game starts
 
     switch (difficulty) {
       case '初級':
@@ -60,7 +62,6 @@ class GameService extends ChangeNotifier {
         break;
     }
 
-    // Move notifyListeners(); here
     notifyListeners();
   }
 
@@ -81,6 +82,7 @@ class GameService extends ChangeNotifier {
     }
     _currentGame!.solvePuzzle();
     _playerBoard = List.from(_currentGame!.sudoku);
+    _stopTimer();  // Stop the timer when the game is solved
     notifyListeners();
     return true;
   }
@@ -113,5 +115,16 @@ class GameService extends ChangeNotifier {
 
   Duration getElapsedTime() {
     return startTime != null ? DateTime.now().difference(startTime!) : Duration(seconds: 0);
+  }
+
+  void _startTimer() {
+    _timer?.cancel();
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      notifyListeners();
+    });
+  }
+
+  void _stopTimer() {
+    _timer?.cancel();
   }
 }
