@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sudoku_practice_0717/services/game_service.dart';
+import 'package:sudoku_practice_0717/widgets/advetisement_area.dart';
 import 'package:sudoku_practice_0717/widgets/game_component.dart';
+import 'package:sudoku_practice_0717/widgets/number_controller.dart';
+import 'package:sudoku_practice_0717/widgets/sudoku_grid.dart';
 
 class GameScreen extends StatefulWidget {
   @override

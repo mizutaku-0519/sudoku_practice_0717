@@ -32,7 +32,8 @@ class GameService extends ChangeNotifier {
 
   void startNewGame({String difficulty = '入門'}) {
     _currentGame = Game(difficulty: difficulty);
-    _playerBoard = List.from(_currentGame!.sudoku);
+    // Create a new player board with empty cells
+    _playerBoard = List.generate(9, (_) => List.generate(9, (_) => null));
     startTime = DateTime.now();
 
     switch (difficulty) {

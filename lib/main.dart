@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:sudoku_practice_0717/services/game_service.dart';
+import 'package:sudoku_practice_0717/views/difficulty_selection_screen.dart';
 import 'package:sudoku_practice_0717/views/game_screen.dart';
 import 'package:sudoku_practice_0717/widgets/user_name_registration_popup.dart';
 import 'views/home_screen.dart';

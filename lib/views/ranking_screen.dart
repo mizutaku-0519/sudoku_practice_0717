@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:sudoku_practice_0717/widgets/advetisement_area.dart';
 
 class RankingScreen extends StatefulWidget {
   @override
@@ -141,21 +142,8 @@ class _RankingScreenState extends State<RankingScreen> with SingleTickerProvider
               ),
             ),
             SizedBox(height: 10),
-            Container(
-              width: 300,
-              height: 50,
-              color: Colors.grey[200],
-              child: Center(
-                child: Text(
-                  "広告表示エリア",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 40),
+            AdvertisementArea(),
+            SizedBox(height: 20),
           ],
         ),
       ),
