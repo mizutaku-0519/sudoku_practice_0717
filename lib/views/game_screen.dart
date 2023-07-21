@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sudoku_practice_0717/services/game_service.dart';
+import 'package:sudoku_practice_0717/views/difficulty_selection_screen.dart';
 import 'package:sudoku_practice_0717/widgets/advertisement_area.dart';
 import 'package:sudoku_practice_0717/widgets/game_component.dart';
 import 'package:sudoku_practice_0717/widgets/number_controller.dart';
@@ -19,7 +20,7 @@ class _GameScreenState extends State<GameScreen> {
     super.initState();
     _gameService = Provider.of<GameService>(context, listen: false);
     WidgetsBinding.instance!.addPostFrameCallback((_) {
-      _gameService.startNewGame();
+      _gameService.startNewGame(difficulty: _gameService.difficulty);
     });
   }
 
@@ -67,7 +68,7 @@ class _GameScreenState extends State<GameScreen> {
                 ),
               );
               if (goBack == true) {
-                Navigator.of(context).pushReplacementNamed('/'); // ホーム画面に戻る
+                Navigator.push(context, MaterialPageRoute(builder: (context) => DifficultySelectionScreen()));
               }
             },
           ),

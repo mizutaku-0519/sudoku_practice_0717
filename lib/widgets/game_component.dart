@@ -23,7 +23,7 @@ class InformationPanel extends StatelessWidget {
           child: Text('残りマス数：$remainingCells/${gameService.totalCells}',style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
         ),
         Flexible(
-          child: Text('ミス数：$mistakeCount/${gameService.maxMistakes}回',style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),),
+          child: Text('ミス数：$mistakeCount / ${gameService.maxMistakes}回',style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),),
         ),
         Flexible(
           child: Row(

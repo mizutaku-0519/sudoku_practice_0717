@@ -8,15 +8,15 @@ class Game {
 
   // 難易度ごとの空白セルの数
   static const difficultyLevels = {
-    '入門': 20,
-    '初級': 30,
-    '中級': 40,
-    '上級': 50,
-    '達人級': 60,
+    '入門': 15,
+    '初級': 25,
+    '中級': 38,
+    '上級': 48,
+    '達人級': 54,
   };
 
   // デフォルトの難易度を '入門' とする
-  Game({String difficulty = '入門'}) {
+  Game({required String difficulty}) {
     reset(difficulty: difficulty);
   }
 

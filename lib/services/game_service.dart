@@ -22,7 +22,7 @@ class GameService extends ChangeNotifier {
   int? selectedNumber;
 
   GameService() {
-    startNewGame();
+    startNewGame(difficulty: '入門');
   }
 
   Game get currentGame => _currentGame!;
@@ -30,27 +30,31 @@ class GameService extends ChangeNotifier {
 
   List<List<int?>> get playerBoard => _playerBoard!;
 
-  void startNewGame({String difficulty = '入門'}) {
+  void startNewGame({required String difficulty}) {
     _currentGame = Game(difficulty: difficulty);
     // 新たなパズルを_playerBoardに反映させる
-    _playerBoard = List.from(_currentGame!.sudoku.map((row) => row.map((cell) => cell == 0 ? null : cell).toList()).toList());
+    _playerBoard = List.from(_currentGame!.sudoku.map((row) => row.map((cell) => cell).toList()).toList());
     startTime = DateTime.now();
 
     switch (difficulty) {
-      case '中級':
-        maxMistakes = 20;
+      case '初級':
+        maxMistakes = 5;
         helpCount = 3;  // Adjust helpCount based on difficulty
         break;
+      case '中級':
+        maxMistakes = 3;
+        helpCount = 2;  // Adjust helpCount based on difficulty
+        break;
       case '上級':
-        maxMistakes = 30;
+        maxMistakes = 3;
         helpCount = 2;  // Adjust helpCount based on difficulty
         break;
       case '達人級':
-        maxMistakes = 30;
+        maxMistakes = 2;
         helpCount = 2;  // Adjust helpCount based on difficulty
         break;
       default:
-        maxMistakes = 10;
+        maxMistakes = 3;
         helpCount = 5;  // Adjust helpCount based on difficulty
         break;
     }
