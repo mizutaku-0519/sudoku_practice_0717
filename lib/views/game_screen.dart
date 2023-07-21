@@ -79,13 +79,13 @@ class _GameScreenState extends State<GameScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Column(
               children: [
-                SizedBox(height: 15,),
+                SizedBox(height: 20,),
                 InformationPanel(), // InformationPanelをSudokuGridの上に配置
-                SizedBox(height: 10,),
+                SizedBox(height: 20,),
                 SudokuGrid(),
                 SizedBox(height: 25,), // SudokuGridの配置
                 ControlPanel(),
-                SizedBox(height: 25,), // ControlPanelをSudokuGridの下に配置
+                SizedBox(height: 20,), // ControlPanelをSudokuGridの下に配置
                 NumberController(),
                 SizedBox(height: 40,),// NumberControllerをControlPanelの下に配置
                 AdvertisementArea(), // AdvertisementAreaをNumberControllerの下に配置

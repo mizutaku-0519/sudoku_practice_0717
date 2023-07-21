@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sudoku_practice_0717/services/game_service.dart';
 import 'package:sudoku_practice_0717/views/game_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:sudoku_practice_0717/views/home_screen.dart';
 
 class Difficulty {
   final String level;
@@ -26,6 +27,27 @@ class DifficultySelectionScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('難易度選択'),
+        leading: IconButton(
+          icon: Icon(Icons.expand_more_outlined),
+          onPressed: () {
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) => HomeScreen(),
+                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                  var begin = Offset(0.0, -1.0);
+                  var end = Offset.zero;
+                  var curve = Curves.ease;
+                  var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                  return SlideTransition(
+                    position: animation.drive(tween),
+                    child: child,
+                  );
+                },
+              ),
+            );
+          },
+        ),
       ),
       body: ListView.builder(
         itemCount: difficulties.length,

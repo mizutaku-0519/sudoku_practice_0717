@@ -32,18 +32,19 @@ class SudokuApp extends StatelessWidget {
             ),
           ),
           appBarTheme: AppBarTheme(
-            backgroundColor: Colors.white, // App bar background color
+            backgroundColor: Color(0xFF1e50a2), // App bar background color
             titleTextStyle: GoogleFonts.zenKakuGothicNew(
               textStyle: Theme.of(context).textTheme.headline6,
-              color: Color(0xFF1e50a2), // App bar text color
+              color: Colors.white, // App bar text color
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
             iconTheme: IconThemeData( // Add this line
-              color: Color(0xFF1e50a2), // Set back button color
+              color: Colors.white, // Set back button color
             ),
             elevation: 0, // Remove shadow from AppBar
           ),
+          scaffoldBackgroundColor: Colors.white, // Add this line
           textTheme: GoogleFonts.zenKakuGothicNewTextTheme(
             Theme.of(context).textTheme,
           ),
