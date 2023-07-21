@@ -21,6 +21,7 @@ class GameService extends ChangeNotifier {
   final int totalCells = 81;
   int? selectedNumber;
 
+
   GameService() {
     startNewGame(difficulty: '入門');
   }

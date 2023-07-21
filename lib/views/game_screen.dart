@@ -81,7 +81,7 @@ class _GameScreenState extends State<GameScreen> {
               children: [
                 SizedBox(height: 15,),
                 InformationPanel(), // InformationPanelをSudokuGridの上に配置
-                SizedBox(height: 15,),
+                SizedBox(height: 10,),
                 SudokuGrid(),
                 SizedBox(height: 25,), // SudokuGridの配置
                 ControlPanel(),
