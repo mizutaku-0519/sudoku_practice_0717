@@ -11,12 +11,8 @@ import 'widgets/game_completion_popup.dart';
 import 'widgets/hidden_popup.dart';
 
 void main() {
-  var game = Game(); // 追加
   runApp(
-    Provider<Game>.value( // 変更
-      value: game, // 変更
-      child: SudokuApp(),
-    ),
+    SudokuApp(),
   );
 }
 

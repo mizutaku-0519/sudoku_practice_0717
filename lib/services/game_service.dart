@@ -55,6 +55,7 @@ class GameService extends ChangeNotifier {
         break;
     }
 
+    // Move notifyListeners(); here
     notifyListeners();
   }
 

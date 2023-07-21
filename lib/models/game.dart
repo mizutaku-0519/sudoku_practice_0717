@@ -30,6 +30,7 @@ class Game {
   }
 
   void generatePuzzle(int emptySquares) {
+    print('Generating new puzzle...');  // Add this debug output
     var sudokuGenerator = SudokuGenerator(emptySquares: emptySquares);
     this.sudoku = sudokuGenerator.newSudoku.map((row) => row.map((cell) => cell == 0 ? null : cell).toList()).toList();
     this.solution = sudokuGenerator.newSudokuSolved;
