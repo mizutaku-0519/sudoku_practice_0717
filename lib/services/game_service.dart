@@ -32,7 +32,8 @@ class GameService extends ChangeNotifier {
 
   void startNewGame({String difficulty = '入門'}) {
     _currentGame = Game(difficulty: difficulty);
-    _playerBoard = List.from(_currentGame!.sudoku);
+    // 新たなパズルを_playerBoardに反映させる
+    _playerBoard = List.from(_currentGame!.sudoku.map((row) => row.map((cell) => cell == 0 ? null : cell).toList()).toList());
     startTime = DateTime.now();
 
     switch (difficulty) {
@@ -54,6 +55,7 @@ class GameService extends ChangeNotifier {
         break;
     }
 
+    // Move notifyListeners(); here
     notifyListeners();
   }
 
