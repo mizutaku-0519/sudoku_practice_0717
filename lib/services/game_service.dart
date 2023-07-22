@@ -1,4 +1,4 @@
-import 'dart:async';  // Add this import at the top
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:sudoku_practice_0717/models/game.dart';
 
@@ -18,47 +18,48 @@ class GameService extends ChangeNotifier {
   DateTime? startTime;
 
   int maxMistakes = 10;
-  int helpCount = 5;  // Add this new property
+  int helpCount = 5;
   final int totalCells = 81;
   int? selectedNumber;
 
-  Timer? _timer;  // Add this property
+  Timer? _timer;
 
   GameService() {
     startNewGame(difficulty: '入門');
   }
 
-  Game get currentGame => _currentGame!;
-  String get difficulty => _currentGame!.difficulty;
+  Game? get currentGame => _currentGame;
+  Game? get game => _currentGame; // 追加した部分
+  String get difficulty => _currentGame?.difficulty ?? '';
 
-  List<List<int?>> get playerBoard => _playerBoard!;
+  List<List<int?>>? get playerBoard => _playerBoard;
 
   void startNewGame({required String difficulty}) {
     _currentGame = Game(difficulty: difficulty);
     _playerBoard = List.from(_currentGame!.sudoku.map((row) => row.map((cell) => cell).toList()).toList());
     startTime = DateTime.now();
-    _startTimer();  // Start the timer when a new game starts
+    _startTimer();
 
     switch (difficulty) {
       case '初級':
         maxMistakes = 5;
-        helpCount = 3;  // Adjust helpCount based on difficulty
+        helpCount = 3;
         break;
       case '中級':
         maxMistakes = 3;
-        helpCount = 2;  // Adjust helpCount based on difficulty
+        helpCount = 2;
         break;
       case '上級':
         maxMistakes = 3;
-        helpCount = 2;  // Adjust helpCount based on difficulty
+        helpCount = 2;
         break;
       case '達人級':
         maxMistakes = 2;
-        helpCount = 2;  // Adjust helpCount based on difficulty
+        helpCount = 2;
         break;
       default:
         maxMistakes = 3;
-        helpCount = 5;  // Adjust helpCount based on difficulty
+        helpCount = 5;
         break;
     }
 
@@ -66,7 +67,7 @@ class GameService extends ChangeNotifier {
   }
 
   bool insertNumber(int row, int col, int number) {
-    if (_playerBoard![row][col] == null && number == _currentGame!.solution[row][col]) {
+    if (_currentGame?.originalPuzzle[row][col] == null && _playerBoard![row][col] == null && number == _currentGame!.solution[row][col]) {
       _playerBoard![row][col] = number;
       notifyListeners();
       return true;
@@ -82,14 +83,16 @@ class GameService extends ChangeNotifier {
     }
     _currentGame!.solvePuzzle();
     _playerBoard = List.from(_currentGame!.sudoku);
-    _stopTimer();  // Stop the timer when the game is solved
+    _stopTimer();
     notifyListeners();
     return true;
   }
 
   void selectCell(int row, int col) {
-    selectedCell = Cell(row, col);
-    notifyListeners();
+    if (_currentGame?.originalPuzzle[row][col] == null) {  // If the cell was not pre-filled
+      selectedCell = Cell(row, col);
+      notifyListeners();
+    }
   }
 
   void selectNumber(int number) {

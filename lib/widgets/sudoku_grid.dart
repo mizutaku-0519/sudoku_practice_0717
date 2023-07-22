@@ -11,6 +11,10 @@ class SudokuGrid extends StatelessWidget {
 
     return Consumer<GameService>(
       builder: (context, gameService, child) {
+        if (gameService == null || gameService.playerBoard == null || gameService.game?.originalPuzzle == null) {
+          return Container(); // GameService or its boards are not initialized yet
+        }
+
         return Container(
           decoration: BoxDecoration(
             color: Color(0xFF1e50a2),
@@ -32,15 +36,18 @@ class SudokuGrid extends StatelessWidget {
               children: List.generate(9, (i) {
                 return TableRow(
                   children: List.generate(9, (j) {
-                    int? cellValue = gameService.playerBoard[i][j];
+                    int? cellValue = gameService.playerBoard![i][j];
                     Color? backgroundColor = Colors.white; // デフォルトの背景色を白に設定
+                    if (gameService.game?.originalPuzzle[i][j] != null) {
+                      backgroundColor = Colors.white;
+                    }
                     if (gameService.selectedCell != null) {
                       if (gameService.selectedCell!.row == i && gameService.selectedCell!.col == j) {
                         backgroundColor = Colors.blueAccent[100];
                       } else if (gameService.selectedCell!.row == i ||
                           gameService.selectedCell!.col == j ||
                           (gameService.selectedCell!.row ~/ 3 == i ~/ 3 && gameService.selectedCell!.col ~/ 3 == j ~/ 3)) {
-                        backgroundColor = Colors.grey[300];
+                        backgroundColor = Colors.grey[200];
                       }
                     }
 
@@ -65,12 +72,19 @@ class SudokuGrid extends StatelessWidget {
                       ),
                       child: InkWell(
                         onTap: () {
-                          gameService.selectCell(i, j);
+                          if (gameService.game?.originalPuzzle[i][j] == null) {
+                            gameService.selectCell(i, j);
+                          }
                         },
                         child: Center(
                           child: Text(
                             cellValue != null ? cellValue.toString() : '',
-                            style: TextStyle(fontFamily: 'Monospace',fontSize: 18), // フォントをMonospaceに設定
+                            style: TextStyle(
+                              fontFamily: 'Monospace',
+                              fontSize: 18, // フォントをMonospaceに設定
+                              fontWeight: gameService.game?.originalPuzzle[i][j] != null ? FontWeight.normal: FontWeight.bold,
+                              color: gameService.game?.originalPuzzle[i][j] != null ? Colors.black : Colors.black,
+                            ),
                           ),
                         ),
                       ),

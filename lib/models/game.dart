@@ -5,6 +5,7 @@ class Game {
   late List<List<int?>> sudoku; // プレイ中の数独パズル
   late List<List<int?>> solution; // パズルの解
   late String difficulty; // 難易度
+  late List<List<int?>> originalPuzzle; // original puzzle
 
   // 難易度ごとの空白セルの数
   static const difficultyLevels = {
@@ -30,10 +31,11 @@ class Game {
   }
 
   void generatePuzzle(int emptySquares) {
-    print('Generating new puzzle...');  // Add this debug output
+    print('Generating new puzzle...');
     var sudokuGenerator = SudokuGenerator(emptySquares: emptySquares);
     this.sudoku = sudokuGenerator.newSudoku.map((row) => row.map((cell) => cell == 0 ? null : cell).toList()).toList();
     this.solution = sudokuGenerator.newSudokuSolved;
+    this.originalPuzzle = this.sudoku.map((row) => row.map((cell) => cell).toList()).toList();
   }
 
   void solvePuzzle() {
