@@ -49,7 +49,7 @@ class SudokuApp extends StatelessWidget {
             Theme.of(context).textTheme,
           ),
         ),
-        home: HomeScreen(),
+        home: GameScreen(),
       ),
     );
   }
