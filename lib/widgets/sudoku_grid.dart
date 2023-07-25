@@ -38,9 +38,35 @@ class SudokuGrid extends StatelessWidget {
                   children: List.generate(9, (j) {
                     int? cellValue = gameService.playerBoard![i][j];
                     Color? backgroundColor = Colors.white; // デフォルトの背景色を白に設定
-                    if (gameService.game?.originalPuzzle[i][j] != null) {
+
+                    //セルの背景色
+                    if (gameService.selectedCell != null) {
+                      if (gameService.selectedCell!.row == i && gameService.selectedCell!.col == j) {
+                        backgroundColor = Colors.blueAccent[100];
+                      } else if (gameService.selectedCell!.row == i ||
+                          gameService.selectedCell!.col == j ||
+                          (gameService.selectedCell!.row ~/ 3 == i ~/ 3 && gameService.selectedCell!.col ~/ 3 == j ~/ 3)) {
+                        backgroundColor = Colors.grey[200];
+                      }
+                    } else if (gameService.game?.originalPuzzle[i][j] != null) {
+                      backgroundColor = Colors.white;
+                    } else if (gameService.isIncorrect[i][j]) {
+                      backgroundColor = Colors.red[200];
+                    } else {
                       backgroundColor = Colors.white;
                     }
+
+                    //セルのテキストカラー
+                    Color textColor = Colors.black;
+                    if (gameService.game?.originalPuzzle[i][j] != null) {
+                      textColor = Colors.black;
+                    } else if (gameService.isCorrectCell(i, j)) {
+                      textColor = Color(0xFF1e50a2);
+                    } else if (gameService.isIncorrect[i][j]) {
+                      textColor = Colors.red;
+                    }
+
+                    //セルのグリッド線
                     if (gameService.selectedCell != null) {
                       if (gameService.selectedCell!.row == i && gameService.selectedCell!.col == j) {
                         backgroundColor = Colors.blueAccent[100];
@@ -50,6 +76,7 @@ class SudokuGrid extends StatelessWidget {
                         backgroundColor = Colors.grey[200];
                       }
                     }
+
 
                     var thickBorderSide = BorderSide(color: Color(0xFF1e50a2), width: 1.5);  // 3x3のマスの内側の枠線
                     var thinBorderSide = BorderSide(color: Colors.grey, width: 0.5);
@@ -68,7 +95,7 @@ class SudokuGrid extends StatelessWidget {
                           right: rightBorder,
                           bottom: bottomBorder,
                         ),
-                        color: backgroundColor,
+                        color: gameService.isIncorrect[i][j] ? Colors.red[200] : backgroundColor, // 背景色の設定
                       ),
                       child: InkWell(
                         onTap: () {
@@ -81,15 +108,14 @@ class SudokuGrid extends StatelessWidget {
                             cellValue != null ? cellValue.toString() : '',
                             style: TextStyle(
                               fontFamily: 'Monospace',
-                              fontSize: 18, // フォントをMonospaceに設定
-                              fontWeight: gameService.game?.originalPuzzle[i][j] != null ? FontWeight.normal: FontWeight.bold,
-                              color: gameService.game?.originalPuzzle[i][j] != null ? Colors.black : Colors.black,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: textColor,  // ここを textColor に変更
                             ),
                           ),
                         ),
                       ),
-                    );
-                  }),
+                    );                  }),
                 );
               }),
             ),
