@@ -79,12 +79,19 @@ class ControlPanel extends StatelessWidget {
             Text('下書き'),
           ],
         ), //下書きボタン
+        // 確定ボタン
         Column(
           children: [
-            IconButton(
-              icon: Icon(Icons.check, size: 30,),
-              onPressed: () {
-                // TODO: ここで数字の入力機能を実装
+            Consumer<GameService>(
+              builder: (context, gameService, child) {
+                return IconButton(
+                  icon: Icon(Icons.check, size: 30,),
+                  onPressed: gameService.selectedCell != null && gameService.selectedNumber != null
+                      ? () {
+                    gameService.confirmInsertion();
+                  }
+                      : null,
+                );
               },
             ),
             Text('確定'),

@@ -9,10 +9,18 @@ class Cell {
   Cell(this.row, this.col);
 }
 
+enum InsertResult {
+  correct,
+  incorrect,
+  alreadyFilled,
+}
+
 class GameService extends ChangeNotifier {
   Game? _currentGame;
   List<List<int?>>? _playerBoard;
   Cell? selectedCell;
+  InsertResult? lastResult;
+  List<List<bool>>? initialCells;
 
   int mistakeCount = 0;
   DateTime? startTime;
@@ -20,7 +28,7 @@ class GameService extends ChangeNotifier {
   int maxMistakes = 10;
   int helpCount = 5;
   final int totalCells = 81;
-  int? selectedNumber;
+  int? selectedNumber;  // 選択された数字を保持する
 
   Timer? _timer;
 
@@ -39,6 +47,18 @@ class GameService extends ChangeNotifier {
     _playerBoard = List.from(_currentGame!.sudoku.map((row) => row.map((cell) => cell).toList()).toList());
     startTime = DateTime.now();
     _startTimer();
+
+    initialCells = List<List<bool>>.generate(
+      9,
+          (_) => List<bool>.filled(9, false),
+    );
+
+    for (int i = 0; i < 9; ++i) {
+      for (int j = 0; j < 9; ++j) {
+        initialCells![i][j] = _currentGame!.originalPuzzle[i][j] != null;
+      }
+    }
+
 
     switch (difficulty) {
       case '初級':
@@ -66,15 +86,25 @@ class GameService extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool insertNumber(int row, int col, int number) {
-    if (_currentGame?.originalPuzzle[row][col] == null && _playerBoard![row][col] == null && number == _currentGame!.solution[row][col]) {
-      _playerBoard![row][col] = number;
-      notifyListeners();
-      return true;
+  // 選択したセルが正しくないかどうかを追跡する2次元リスト
+  List<List<bool>> isIncorrect = List.generate(9, (_) => List.filled(9, false));
+
+  InsertResult insertNumber(int row, int col, int number) {
+    if (_currentGame?.originalPuzzle[row][col] != null || _playerBoard![row][col] != null) {
+      return InsertResult.alreadyFilled;
     }
-    mistakeCount++;
-    notifyListeners();
-    return false;
+    if (number == _currentGame!.solution[row][col]) {
+      _playerBoard![row][col] = number;
+      isIncorrect[row][col] = false;
+      lastResult = InsertResult.correct;
+    } else {
+      _playerBoard![row][col] = number;
+      isIncorrect[row][col] = true;
+      mistakeCount++;
+      lastResult = InsertResult.incorrect;
+    }
+    notifyListeners();  // ここでリスナーに通知します
+    return lastResult!;
   }
 
   bool solveGame() {
@@ -91,6 +121,7 @@ class GameService extends ChangeNotifier {
   void selectCell(int row, int col) {
     if (_currentGame?.originalPuzzle[row][col] == null) {  // If the cell was not pre-filled
       selectedCell = Cell(row, col);
+      print('Selected cell: ($row, $col)');
       notifyListeners();
     }
   }
@@ -98,6 +129,13 @@ class GameService extends ChangeNotifier {
   void selectNumber(int number) {
     selectedNumber = number;
     notifyListeners();
+  }
+
+  void confirmInsertion() {
+    if (selectedCell != null && selectedNumber != null) {
+      lastResult = insertNumber(selectedCell!.row, selectedCell!.col, selectedNumber!);
+      notifyListeners();
+    }
   }
 
   int getRemainingCellsCount() {
@@ -111,6 +149,29 @@ class GameService extends ChangeNotifier {
     }
     return remaining;
   }
+
+
+
+  bool isMistake() {
+    return lastResult == InsertResult.incorrect;
+  }
+
+  // 追加したメソッド
+  void incrementMistakeCount() {
+    mistakeCount++;
+    notifyListeners();
+  }
+
+  // 追加したメソッド
+  bool isCorrectCell(int row, int col) {
+    if (_playerBoard![row][col] == null) {
+      return false;
+    }
+    return _currentGame?.solution[row][col] == _playerBoard![row][col];  // solution をチェックするように変更
+  }
+
+
+
 
   int getMistakeCount() {
     return mistakeCount;
