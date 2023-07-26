@@ -21,6 +21,9 @@ class GameService extends ChangeNotifier {
   Cell? selectedCell;
   InsertResult? lastResult;
   List<List<bool>>? initialCells;
+  // 各セルの仮の入力を保持するための新たな2次元配列
+  List<List<int?>>? provisionalBoard;
+
 
   int mistakeCount = 0;
   DateTime? startTime;
@@ -45,6 +48,7 @@ class GameService extends ChangeNotifier {
   void startNewGame({required String difficulty}) {
     _currentGame = Game(difficulty: difficulty);
     _playerBoard = List.from(_currentGame!.sudoku.map((row) => row.map((cell) => cell).toList()).toList());
+    provisionalBoard = List.generate(9, (_) => List<int?>.filled(9, null));
     startTime = DateTime.now();
     _startTimer();
 
@@ -90,7 +94,7 @@ class GameService extends ChangeNotifier {
   List<List<bool>> isIncorrect = List.generate(9, (_) => List.filled(9, false));
 
   InsertResult insertNumber(int row, int col, int number) {
-    if (_currentGame?.originalPuzzle[row][col] != null || _playerBoard![row][col] != null) {
+    if (_currentGame?.originalPuzzle[row][col] != null) {
       return InsertResult.alreadyFilled;
     }
     if (number == _currentGame!.solution[row][col]) {
@@ -103,9 +107,10 @@ class GameService extends ChangeNotifier {
       mistakeCount++;
       lastResult = InsertResult.incorrect;
     }
-    notifyListeners();  // ここでリスナーに通知します
+    notifyListeners();
     return lastResult!;
   }
+
 
   bool solveGame() {
     if (_currentGame == null) {
@@ -122,21 +127,32 @@ class GameService extends ChangeNotifier {
     if (_currentGame?.originalPuzzle[row][col] == null) {  // If the cell was not pre-filled
       selectedCell = Cell(row, col);
       print('Selected cell: ($row, $col)');
+      selectedNumber = provisionalBoard![row][col] ?? 0;  // 選択したセルの仮の入力を取得します。nullの場合は0を代入します
       notifyListeners();
     }
   }
 
+
+
   void selectNumber(int number) {
+    if (selectedCell != null) {
+      // 選択したセルの仮の入力を更新します
+      provisionalBoard![selectedCell!.row][selectedCell!.col] = number;
+    }
     selectedNumber = number;
     notifyListeners();
   }
 
+
   void confirmInsertion() {
     if (selectedCell != null && selectedNumber != null) {
       lastResult = insertNumber(selectedCell!.row, selectedCell!.col, selectedNumber!);
+      provisionalBoard![selectedCell!.row][selectedCell!.col] = null;  // 確定したら、そのセルの仮の入力をリセットします
+      selectedNumber = null;
       notifyListeners();
     }
   }
+
 
   int getRemainingCellsCount() {
     int remaining = 0;
