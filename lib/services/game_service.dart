@@ -94,7 +94,8 @@ class GameService extends ChangeNotifier {
   List<List<bool>> isIncorrect = List.generate(9, (_) => List.filled(9, false));
 
   InsertResult insertNumber(int row, int col, int number) {
-    if (_currentGame?.originalPuzzle[row][col] != null) {
+    // 元々の数字があるか、すでに正しい数字が入っている場合は挿入しない
+    if (_currentGame?.originalPuzzle[row][col] != null || isCorrectCell(row, col)) {
       return InsertResult.alreadyFilled;
     }
     if (number == _currentGame!.solution[row][col]) {
@@ -112,6 +113,7 @@ class GameService extends ChangeNotifier {
   }
 
 
+
   bool solveGame() {
     if (_currentGame == null) {
       return false;
@@ -124,13 +126,16 @@ class GameService extends ChangeNotifier {
   }
 
   void selectCell(int row, int col) {
-    if (_currentGame?.originalPuzzle[row][col] == null) {  // If the cell was not pre-filled
-      selectedCell = Cell(row, col);
-      print('Selected cell: ($row, $col)');
-      selectedNumber = provisionalBoard![row][col] ?? 0;  // 選択したセルの仮の入力を取得します。nullの場合は0を代入します
-      notifyListeners();
+    // 元々の数字があるか、またはすでに正しい数字が入っている場合はセルを選択しない
+    if (_currentGame?.originalPuzzle[row][col] != null || isCorrectCell(row, col)) {
+      return;
     }
+    selectedCell = Cell(row, col);
+    print('Selected cell: ($row, $col)');
+    selectedNumber = provisionalBoard![row][col] ?? 0;  // 選択したセルの仮の入力を取得します。nullの場合は0を代入します
+    notifyListeners();
   }
+
 
 
 
