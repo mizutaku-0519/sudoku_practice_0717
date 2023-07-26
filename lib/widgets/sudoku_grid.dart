@@ -103,17 +103,23 @@ class SudokuGrid extends StatelessWidget {
                             gameService.selectCell(i, j);
                           }
                         },
-                        child: Center(
-                          child: Text(
-                            cellValue != null ? cellValue.toString() : '',
-                            style: TextStyle(
-                              fontFamily: 'Monospace',
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: textColor,  // ここを textColor に変更
+                          child: Center(
+                            child: Text(
+                              cellValue != null
+                                  ? cellValue.toString()
+                                  : gameService.provisionalBoard != null && gameService.provisionalBoard![i][j] != null
+                                  ? gameService.provisionalBoard![i][j]?.toString() ?? ''
+                                  : '',
+                              style: TextStyle(
+                                fontFamily: 'Monospace',
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: gameService.provisionalBoard != null && gameService.provisionalBoard![i][j] != null
+                                    ? Colors.black12
+                                    : textColor,
+                              ),
                             ),
                           ),
-                        ),
                       ),
                     );                  }),
                 );
