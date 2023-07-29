@@ -87,10 +87,7 @@ class ControlPanel extends StatelessWidget {
                 return IconButton(
                   icon: Icon(Icons.check, size: 30,),
                   onPressed: gameService.selectedCell != null && gameService.selectedNumber != null
-                      ? () {
-                    gameService.confirmInsertion();
-                  }
-                      : null,
+                      ? () {gameService.confirmInsertion(context);} : null,
                 );
               },
             ),
