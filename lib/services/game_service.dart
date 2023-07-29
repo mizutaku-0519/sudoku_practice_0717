@@ -126,7 +126,7 @@ class GameService extends ChangeNotifier {
       // GameCompletionPopupを表示
       showDialog(
         context: context,
-        builder: (BuildContext context) => GameCompletionPopup(),
+        builder: (BuildContext context) => GameCompletionPopup(gameService: this),
       );
     }
   }

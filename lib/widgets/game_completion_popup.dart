@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:sudoku_practice_0717/services/game_service.dart';
+import 'package:sudoku_practice_0717/utils/utility.dart';
 import 'package:sudoku_practice_0717/views/difficulty_selection_screen.dart';
 
 class GameCompletionPopup extends StatefulWidget {
+  final GameService gameService;
+
+  GameCompletionPopup({required this.gameService});
+
   @override
   _GameCompletionPopupState createState() => _GameCompletionPopupState();
 }
@@ -9,14 +15,17 @@ class GameCompletionPopup extends StatefulWidget {
 class _GameCompletionPopupState extends State<GameCompletionPopup> with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _scaleAnimation;
-  final String clearTime = '00:10:15';
-  final String missCount = '3';
-  final String score = '950';
-  final String weeklyScore = '1,980,481';
+  late final String clearTime;
+  late final String missCount;
+  final String score = '130';
+  final String weeklyScore = '1,234,567';
 
   @override
   void initState() {
     super.initState();
+
+    clearTime = formatDuration(widget.gameService.getElapsedTime());
+    missCount = widget.gameService.getMistakeCount().toString();
 
     _controller = AnimationController(
       vsync: this,
