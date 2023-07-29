@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:sudoku_practice_0717/models/game.dart';
+import 'package:sudoku_practice_0717/widgets/game_completion_popup.dart';
 
 class Cell {
   final int row;
@@ -93,7 +95,7 @@ class GameService extends ChangeNotifier {
   // 選択したセルが正しくないかどうかを追跡する2次元リスト
   List<List<bool>> isIncorrect = List.generate(9, (_) => List.filled(9, false));
 
-  InsertResult insertNumber(int row, int col, int number) {
+  InsertResult insertNumber(BuildContext context, int row, int col, int number) {
     // 元々の数字があるか、すでに正しい数字が入っている場合は挿入しない
     if (_currentGame?.originalPuzzle[row][col] != null || isCorrectCell(row, col)) {
       return InsertResult.alreadyFilled;
@@ -109,7 +111,24 @@ class GameService extends ChangeNotifier {
       lastResult = InsertResult.incorrect;
     }
     notifyListeners();
+    // 全てのセルが埋まったかどうかを確認
+    checkCompletion(context);
     return lastResult!;
+  }
+
+
+  void checkCompletion(BuildContext context) {
+    // ゲームが終了しているかどうかをチェック
+    if (getRemainingCellsCount() == 0 && mistakeCount < maxMistakes) {
+      // タイマーを止める
+      _stopTimer();
+
+      // GameCompletionPopupを表示
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => GameCompletionPopup(gameService: this),
+      );
+    }
   }
 
 
@@ -149,14 +168,15 @@ class GameService extends ChangeNotifier {
   }
 
 
-  void confirmInsertion() {
+  void confirmInsertion(BuildContext context) {
     if (selectedCell != null && selectedNumber != null) {
-      lastResult = insertNumber(selectedCell!.row, selectedCell!.col, selectedNumber!);
+      lastResult = insertNumber(context, selectedCell!.row, selectedCell!.col, selectedNumber!);
       provisionalBoard![selectedCell!.row][selectedCell!.col] = null;  // 確定したら、そのセルの仮の入力をリセットします
       selectedNumber = null;
       notifyListeners();
     }
   }
+
 
 
   int getRemainingCellsCount() {

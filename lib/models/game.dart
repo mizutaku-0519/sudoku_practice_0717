@@ -9,7 +9,7 @@ class Game {
 
   // 難易度ごとの空白セルの数
   static const difficultyLevels = {
-    '入門': 15,
+    '入門': 1,
     '初級': 25,
     '中級': 38,
     '上級': 48,
