@@ -18,8 +18,8 @@ class SudokuGrid extends StatelessWidget {
         return Container(
           decoration: BoxDecoration(
             color: Color(0xFF1e50a2),
-            borderRadius: BorderRadius.circular(5.0), // 9x9のマスの外枠に丸みを追加
-            boxShadow: [ // 影を追加
+            borderRadius: BorderRadius.circular(5.0),
+            boxShadow: [
               BoxShadow(
                 color: Colors.grey.withOpacity(0.3),
                 spreadRadius: 1,
@@ -27,9 +27,9 @@ class SudokuGrid extends StatelessWidget {
                 offset: Offset(0, 1),
               ),
             ],
-            border: Border.all(color: Color(0xFF1e50a2), width: 1.5), // 9x9のマスを囲む外側の枠線
+            border: Border.all(color: Color(0xFF1e50a2), width: 1.5),
           ),
-          child: ClipRRect( // 追加：ClipRRectでTableをラップ
+          child: ClipRRect(
             borderRadius: BorderRadius.circular(10.0),
             child: Table(
               defaultVerticalAlignment: TableCellVerticalAlignment.middle,
@@ -37,9 +37,8 @@ class SudokuGrid extends StatelessWidget {
                 return TableRow(
                   children: List.generate(9, (j) {
                     int? cellValue = gameService.playerBoard![i][j];
-                    Color? backgroundColor = Colors.white; // デフォルトの背景色を白に設定
+                    Color? backgroundColor = Colors.white;
 
-                    //セルの背景色
                     if (gameService.selectedCell != null) {
                       if (gameService.selectedCell!.row == i && gameService.selectedCell!.col == j) {
                         backgroundColor = Colors.blueAccent[100];
@@ -56,7 +55,6 @@ class SudokuGrid extends StatelessWidget {
                       backgroundColor = Colors.white;
                     }
 
-                    //セルのテキストカラー
                     Color textColor = Colors.black;
                     if (gameService.game?.originalPuzzle[i][j] != null) {
                       textColor = Colors.black;
@@ -66,19 +64,7 @@ class SudokuGrid extends StatelessWidget {
                       textColor = Colors.red;
                     }
 
-                    //セルのグリッド線
-                    if (gameService.selectedCell != null) {
-                      if (gameService.selectedCell!.row == i && gameService.selectedCell!.col == j) {
-                        backgroundColor = Colors.blueAccent[100];
-                      } else if (gameService.selectedCell!.row == i ||
-                          gameService.selectedCell!.col == j ||
-                          (gameService.selectedCell!.row ~/ 3 == i ~/ 3 && gameService.selectedCell!.col ~/ 3 == j ~/ 3)) {
-                        backgroundColor = Colors.grey[200];
-                      }
-                    }
-
-
-                    var thickBorderSide = BorderSide(color: Color(0xFF1e50a2), width: 1.5);  // 3x3のマスの内側の枠線
+                    var thickBorderSide = BorderSide(color: Color(0xFF1e50a2), width: 1.5);
                     var thinBorderSide = BorderSide(color: Colors.grey, width: 0.5);
                     var leftBorder = j % 3 == 0 ? thickBorderSide : thinBorderSide;
                     var topBorder = i % 3 == 0 ? thickBorderSide : thinBorderSide;
@@ -95,33 +81,35 @@ class SudokuGrid extends StatelessWidget {
                           right: rightBorder,
                           bottom: bottomBorder,
                         ),
-                        color: gameService.isIncorrect[i][j] ? Colors.red[200] : backgroundColor, // 背景色の設定
+                        color: gameService.isIncorrect[i][j] ? Colors.red[200] : backgroundColor,
                       ),
                       child: InkWell(
                         onTap: () {
                           if (gameService.game?.originalPuzzle[i][j] == null) {
                             gameService.selectCell(i, j);
+                            gameService.notifyListeners();  // Update the UI whenever a cell is selected
                           }
                         },
-                          child: Center(
-                            child: Text(
-                              cellValue != null
-                                  ? cellValue.toString()
-                                  : gameService.provisionalBoard != null && gameService.provisionalBoard![i][j] != null
-                                  ? gameService.provisionalBoard![i][j]?.toString() ?? ''
-                                  : '',
-                              style: TextStyle(
-                                fontFamily: 'Monospace',
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: gameService.provisionalBoard != null && gameService.provisionalBoard![i][j] != null
-                                    ? Colors.black12
-                                    : textColor,
-                              ),
+                        child: Center(
+                          child: Text(
+                            cellValue != null
+                                ? cellValue.toString()
+                                : gameService.provisionalBoard != null && gameService.provisionalBoard![i][j] != null
+                                ? gameService.provisionalBoard![i][j]?.toString() ?? ''
+                                : '',
+                            style: TextStyle(
+                              fontFamily: 'Monospace',
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: gameService.provisionalBoard != null && gameService.provisionalBoard![i][j] != null
+                                  ? Colors.black12
+                                  : textColor,
                             ),
                           ),
+                        ),
                       ),
-                    );                  }),
+                    );
+                  }),
                 );
               }),
             ),

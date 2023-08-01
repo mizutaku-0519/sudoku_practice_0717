@@ -5,9 +5,6 @@ import 'package:sudoku_practice_0717/services/game_service.dart';
 class NumberController extends StatelessWidget {
   void _onChipTap(BuildContext context, int number) {
     var gameService = Provider.of<GameService>(context, listen: false);
-    if (gameService.isMistake()) {
-      gameService.incrementMistakeCount();
-    }
     gameService.selectNumber(number);
   }
 
