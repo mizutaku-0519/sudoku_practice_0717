@@ -99,6 +99,7 @@ class GameService extends ChangeNotifier {
   // プレイヤーがセルに数字を挿入した結果を追跡する2次元リスト
   List<List<bool>> isIncorrect = List.generate(9, (_) => List.filled(9, false));
 
+
   // プレイヤーが指定したセルに指定した数字を仮に挿入するためのメソッド
   InsertResult insertProvisionalNumber(int row, int col, int number) {
     if (_currentGame?.originalPuzzle[row][col] != null ||
@@ -170,16 +171,17 @@ class GameService extends ChangeNotifier {
     notifyListeners();
   }
 
-  // プレイヤーが指定した数字を選択するためのメソッド
+// プレイヤーが指定した数字を選択するためのメソッド
   void selectNumber(int number) {
     if (selectedCell != null) {
-      insertProvisionalNumber(selectedCell!.row, selectedCell!.col, number);
+      _playerBoard![selectedCell!.row][selectedCell!.col] = number;
+      provisionalBoard![selectedCell!.row][selectedCell!.col] = number;
+      lastResult = InsertResult.correct; // 仮に正しいとする
     }
     selectedNumber = number;
     notifyListeners();
   }
 
-  // プレイヤーが仮に挿入した数字を確定するためのメソッド
 // プレイヤーが仮に挿入した数字を確定するためのメソッド
   void confirmInsertion(BuildContext context) {
     if (selectedCell != null && provisionalBoard![selectedCell!.row][selectedCell!.col] != null) {  // ここを修正
@@ -204,10 +206,11 @@ class GameService extends ChangeNotifier {
       provisionalBoard![selectedCell!.row][selectedCell!.col] = null;
       selectedNumber = null;
       notifyListeners();
+    }
 
-      if (getRemainingCellsCount() == 0) {
-        checkCompletion(context);
-      }
+    // Always check completion after insertion
+    if (getRemainingCellsCount() == 0 && mistakeCount < maxMistakes) {
+      checkCompletion(context);
     }
   }
 
@@ -223,6 +226,20 @@ class GameService extends ChangeNotifier {
     }
     return remaining;
   }
+
+  // 残りの未解決のセルの数を取得するためのメソッド（仮の盤面用）
+  int getProvisionalCellsCount() {
+    int remaining = 0;
+    for (List<int?> row in provisionalBoard!) {
+      for (int? cell in row) {
+        if (cell == null) {
+          remaining++;
+        }
+      }
+    }
+    return remaining;
+  }
+
 
   // 最後に挿入した数字が間違っていたかどうかを確認するためのメソッド
   bool isMistake() {
