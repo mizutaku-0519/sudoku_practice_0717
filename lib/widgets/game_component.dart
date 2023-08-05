@@ -83,7 +83,6 @@ class ControlPanel extends StatelessWidget {
               '下書き',
               style: TextStyle(
                 color: gameService.isDraftMode ? Color(0xFF1e50a2) : Colors.black, // 下書きモード時は青くする
-                fontWeight: gameService.isDraftMode ? FontWeight.normal : FontWeight.normal, // 下書きモード時はboldにする
               ),
             ),
           ],
