@@ -71,14 +71,23 @@ class ControlPanel extends StatelessWidget {
         Column(
           children: [
             IconButton(
-              icon: Icon(Icons.edit, size: 30,),
+              icon: Icon(Icons.edit,
+                size: 30,
+                color: gameService.isDraftMode ? Color(0xFF1e50a2) : Colors.black, // 下書きモード時は青くする
+              ),
               onPressed: () {
-                // TODO: ここで下書き機能を実装
+                gameService.toggleDraftMode(); // 下書きモードの切り替え
               },
             ),
-            Text('下書き'),
+            Text(
+              '下書き',
+              style: TextStyle(
+                color: gameService.isDraftMode ? Color(0xFF1e50a2) : Colors.black, // 下書きモード時は青くする
+                fontWeight: gameService.isDraftMode ? FontWeight.normal : FontWeight.normal, // 下書きモード時はboldにする
+              ),
+            ),
           ],
-        ), //下書きボタン
+        ),
         // 確定ボタン
         Column(
           children: [

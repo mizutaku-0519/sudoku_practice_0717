@@ -47,6 +47,18 @@ class GameService extends ChangeNotifier {
 
   List<List<int?>>? get playerBoard => _playerBoard;
 
+  // 下書きモードの状態を保持する変数
+  bool _isDraftMode = false;
+
+  // 外部から状態を参照できるようにゲッターを定義
+  bool get isDraftMode => _isDraftMode;
+
+  // 下書きモードを切り替えるメソッド
+  void toggleDraftMode() {
+    _isDraftMode = !_isDraftMode;
+    notifyListeners(); // 状態が変わったことを通知する
+  }
+
   // 新しいゲームを開始するためのメソッド
   void startNewGame({required String difficulty}) {
     mistakeCount = 0;  // 新たなゲームを開始するたびにミスカウントをリセットします
