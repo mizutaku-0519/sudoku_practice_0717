@@ -67,6 +67,13 @@ class GameService extends ChangeNotifier {
       for (int j = 0; j < 9; ++j) {
         initialCells![i][j] = _currentGame!.originalPuzzle[i][j] != null;
       }
+
+      print('Original Puzzle:');
+      _currentGame?.originalPuzzle.forEach((row) {
+        print(row);
+      });
+
+
     }
 
 
@@ -163,6 +170,7 @@ class GameService extends ChangeNotifier {
   void selectCell(int row, int col) {
     // 元々の数字があるか、またはすでに正しい数字が入っている場合はセルを選択しない
     if (_currentGame?.originalPuzzle[row][col] != null || isCorrectCell(row, col)) {
+      print('Cell is not selectable');
       return;
     }
     selectedCell = Cell(row, col);
@@ -171,41 +179,66 @@ class GameService extends ChangeNotifier {
     notifyListeners();
   }
 
-// プレイヤーが指定した数字を選択するためのメソッド
+  // プレイヤーが指定した数字を選択するためのメソッド
   void selectNumber(int number) {
     if (selectedCell != null) {
-      _playerBoard![selectedCell!.row][selectedCell!.col] = number;
+      // _playerBoard![selectedCell!.row][selectedCell!.col] = number;
       provisionalBoard![selectedCell!.row][selectedCell!.col] = number;
-      lastResult = InsertResult.correct; // 仮に正しいとする
+      // ここで正解かどうかを判断する
+      if (number == _currentGame!.solution[selectedCell!.row][selectedCell!.col]) {
+        lastResult = InsertResult.correct;
+        print('Selected number: $number for cell: (${selectedCell!.row}, ${selectedCell!.col}) is correct');
+      } else {
+        lastResult = InsertResult.incorrect;
+        print('Selected number: $number for cell: (${selectedCell!.row}, ${selectedCell!.col}) is incorrect');
+      }
+    } else {
+      print('No cell is selected');
     }
     selectedNumber = number;
     notifyListeners();
   }
 
+
 // プレイヤーが仮に挿入した数字を確定するためのメソッド
   void confirmInsertion(BuildContext context) {
-    if (selectedCell != null && provisionalBoard![selectedCell!.row][selectedCell!.col] != null) {  // ここを修正
-      if (_currentGame?.originalPuzzle[selectedCell!.row][selectedCell!.col] != null || isCorrectCell(selectedCell!.row, selectedCell!.col)) {
+    if (_playerBoard![selectedCell!.row][selectedCell!.col] == provisionalBoard![selectedCell!.row][selectedCell!.col]) {
+      print('Same number already confirmed for this cell');
+      return;
+    }
+
+    if (selectedCell != null && provisionalBoard![selectedCell!.row][selectedCell!.col] != null) {
+      if (_currentGame?.originalPuzzle[selectedCell!.row][selectedCell!.col] != null) {
+        print('Cell contains original number');
         return;
       }
 
-      if (provisionalBoard![selectedCell!.row][selectedCell!.col] == _currentGame!.solution[selectedCell!.row][selectedCell!.col]) {  // ここを修正
-        _playerBoard![selectedCell!.row][selectedCell!.col] = provisionalBoard![selectedCell!.row][selectedCell!.col];  // ここを修正
-        isIncorrect[selectedCell!.row][selectedCell!.col] = false;
-        lastResult = InsertResult.correct;
-      } else {
-        _playerBoard![selectedCell!.row][selectedCell!.col] = provisionalBoard![selectedCell!.row][selectedCell!.col];  // ここを修正
-        isIncorrect[selectedCell!.row][selectedCell!.col] = true;
-
-        incrementMistakeCount();
-        print('Mistake count increased: $mistakeCount');
-
-        lastResult = InsertResult.incorrect;
+      if (_currentGame?.originalPuzzle[selectedCell!.row][selectedCell!.col] != null || isCorrectCell(selectedCell!.row, selectedCell!.col)) {
+        print('Cell is not fillable');
+        return;
       }
 
-      provisionalBoard![selectedCell!.row][selectedCell!.col] = null;
+
+      if (provisionalBoard![selectedCell!.row][selectedCell!.col] == _currentGame!.solution[selectedCell!.row][selectedCell!.col]) {
+        _playerBoard![selectedCell!.row][selectedCell!.col] = provisionalBoard![selectedCell!.row][selectedCell!.col];
+        isIncorrect[selectedCell!.row][selectedCell!.col] = false;
+        lastResult = InsertResult.correct;
+        print('Confirmed insertion: ${provisionalBoard![selectedCell!.row][selectedCell!.col]} for cell: (${selectedCell!.row}, ${selectedCell!.col})');
+        provisionalBoard![selectedCell!.row][selectedCell!.col] = null;  // Correct answer, so reset the provisional value
+      } else {
+        _playerBoard![selectedCell!.row][selectedCell!.col] = provisionalBoard![selectedCell!.row][selectedCell!.col];
+        isIncorrect[selectedCell!.row][selectedCell!.col] = true;
+        incrementMistakeCount();
+        print('Mistake count increased: $mistakeCount');
+        lastResult = InsertResult.incorrect;
+        print('Incorrect insertion: ${provisionalBoard![selectedCell!.row][selectedCell!.col]} for cell: (${selectedCell!.row}, ${selectedCell!.col})');
+        // Do not reset the provisional value if the answer is incorrect
+      }
+      // provisionalBoard![selectedCell!.row][selectedCell!.col] = null;
       selectedNumber = null;
       notifyListeners();
+    } else {
+      print('No cell is selected or no provisional number');
     }
 
     // Always check completion after insertion
@@ -217,14 +250,28 @@ class GameService extends ChangeNotifier {
   // 残りの未解決のセルの数を取得するためのメソッド
   int getRemainingCellsCount() {
     int remaining = 0;
-    for (List<int?> row in _playerBoard!) {
-      for (int? cell in row) {
-        if (cell == null) {
+    for (int row = 0; row < 9; ++row) {
+      for (int col = 0; col < 9; ++col) {
+        if (_playerBoard![row][col] == null) {
           remaining++;
         }
       }
     }
     return remaining;
+  }
+
+  void selectAndValidateNumber(int number) {
+    if (selectedCell != null) {
+      _playerBoard![selectedCell!.row][selectedCell!.col] = number;
+      if (_playerBoard![selectedCell!.row][selectedCell!.col] == _currentGame!.solution[selectedCell!.row][selectedCell!.col]) {
+        print('Selected number: $number for cell: (${selectedCell!.row}, ${selectedCell!.col}) is correct');
+      } else {
+        print('Selected number: $number for cell: (${selectedCell!.row}, ${selectedCell!.col}) is incorrect');
+      }
+    } else {
+      print('No cell is selected');
+    }
+    notifyListeners();
   }
 
   // 残りの未解決のセルの数を取得するためのメソッド（仮の盤面用）

@@ -9,6 +9,7 @@ class SudokuGrid extends StatelessWidget {
     var screenWidth = screenSize.width - 16.0;
     var cellSize = screenWidth / 9.0;
 
+
     return Consumer<GameService>(
       builder: (context, gameService, child) {
         if (gameService == null || gameService.playerBoard == null || gameService.game?.originalPuzzle == null) {
@@ -29,6 +30,7 @@ class SudokuGrid extends StatelessWidget {
             ],
             border: Border.all(color: Color(0xFF1e50a2), width: 1.5),
           ),
+
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10.0),
             child: Table(
@@ -36,7 +38,17 @@ class SudokuGrid extends StatelessWidget {
               children: List.generate(9, (i) {
                 return TableRow(
                   children: List.generate(9, (j) {
-                    int? cellValue = gameService.playerBoard![i][j];
+                    int? cellValue;
+                    if (gameService.game?.originalPuzzle[i][j] != null) {
+                      cellValue = gameService.playerBoard![i][j];
+                    } else if (gameService.isCorrectCell(i, j)) {
+                      cellValue = gameService.playerBoard![i][j];
+                    } else if (gameService.isIncorrect[i][j]) {
+                      cellValue = gameService.provisionalBoard![i][j];
+                    } else {
+                      cellValue = gameService.provisionalBoard![i][j];
+                    }
+
                     Color? backgroundColor = Colors.white;
 
                     if (gameService.selectedCell != null) {
@@ -102,7 +114,7 @@ class SudokuGrid extends StatelessWidget {
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: gameService.provisionalBoard != null && gameService.provisionalBoard![i][j] != null
-                                  ? Colors.black12
+                                  ? Colors.black45
                                   : textColor,
                             ),
                           ),

@@ -6,6 +6,7 @@ class NumberController extends StatelessWidget {
   void _onChipTap(BuildContext context, int number) {
     var gameService = Provider.of<GameService>(context, listen: false);
     gameService.selectNumber(number);
+    gameService.notifyListeners();
   }
 
 
