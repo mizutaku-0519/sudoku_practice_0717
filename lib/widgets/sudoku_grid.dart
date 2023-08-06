@@ -103,7 +103,11 @@ class SudokuGrid extends StatelessWidget {
                           }
                         },
                         child: Center(
-                          child: Text(
+                          child: gameService.selectedCell?.row == i &&
+                              gameService.selectedCell?.col == j &&
+                              gameService.isDraftMode
+                              ? _buildDraftModeWidget(cellSize)
+                              : Text(
                             cellValue != null
                                 ? cellValue.toString()
                                 : gameService.provisionalBoard != null && gameService.provisionalBoard![i][j] != null
@@ -130,4 +134,35 @@ class SudokuGrid extends StatelessWidget {
       },
     );
   }
+}
+
+Widget _buildDraftModeWidget(double cellSize) {
+  double draftCellSize = cellSize / 3 * 0.8; // こちらの値を小さく調整してみてください。
+  return Table(
+    defaultColumnWidth: FixedColumnWidth(draftCellSize), // こちらを追加
+    children: List.generate(3, (i) {
+      return TableRow(
+        children: List.generate(3, (j) {
+          int draftValue = i * 3 + j + 1;
+          return Container(
+            margin: EdgeInsets.all(0.5), // こちらを追加して間隔を調整
+            width: draftCellSize,
+            height: draftCellSize, // こちらで行の高さを設定
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                draftValue.toString(),
+                style: TextStyle(
+                  fontFamily: 'Monospace',
+                  fontSize: 11,
+                  fontWeight: FontWeight.normal,
+                  color: Colors.black45,
+                ),
+              ),
+            ),
+          );
+        }),
+      );
+    }),
+  );
 }
